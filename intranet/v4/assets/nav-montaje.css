@@ -125,3 +125,9 @@ html.v4 .lw4-cab-ava .material-symbols-outlined{ font-size:18px; }
   
   html.v4.lw4-fijo .lw4-sb-cerrar{ display:none; }
 }
+
+
+@media print{
+  html.v4 .lw4-sb, html.v4 .lw4-velo, html.v4 .lw4-cab{ display:none !important; }
+  html.v4.lw4-fijo body{ padding:0 !important; }
+}

@@ -8,7 +8,9 @@
     subcabecera: "ERP",
     titulo: "AxisWorks ERP",
     firma_correo: "AxisWorks",
-    inicio: "/intranet/v4/home/"
+    inicio: "/intranet/v4/home/",
+    masterplans: Object.freeze({}),
+    proyectos_con_fases: Object.freeze([])
   });
   try { Object.defineProperty(window, 'LW_INSTANCIA', { value: ficha, writable: false, configurable: false, enumerable: true }); }
   catch (e) {}
