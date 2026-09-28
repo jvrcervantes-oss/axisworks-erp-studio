@@ -1,10 +1,10 @@
 # GENERADO por comercial/demo-erp/build.py --instancia axisworks-demo — no editar.
-# erp.axisworks.studio: el ERP de la instancia (más sus dominios_alias). Fuera de esos hosts, redirige a él.
+# app.axisworks.studio: el ERP de la instancia (más sus dominios_alias). Fuera de esos hosts, redirige a él.
 # 302 y no 301 (AXW-70, Deploy): el navegador guarda un 301 para siempre y un cambio de dominio lo dejaría grabado.
 <IfModule mod_rewrite.c>
   RewriteEngine On
-  RewriteCond %{HTTP_HOST} !^(erp\.axisworks\.studio|app\.axisworks\.studio)$ [NC]
-  RewriteRule ^(.*)$ https://erp.axisworks.studio/$1 [R=302,L]
+  RewriteCond %{HTTP_HOST} !^(app\.axisworks\.studio|erp\.axisworks\.studio)$ [NC]
+  RewriteRule ^(.*)$ https://app.axisworks.studio/$1 [R=302,L]
 </IfModule>
 <IfModule mod_headers.c>
   Header always set X-Robots-Tag "noindex, nofollow"
