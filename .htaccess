@@ -1,25 +1,24 @@
-# GENERADO por comercial/demo-erp/build.py --instancia axisworks-demo — no editar.
-# app.axisworks.studio: el ERP de la instancia (más sus dominios_alias). Fuera de esos hosts, redirige a él.
-# 302 y no 301 (AXW-70, Deploy): el navegador guarda un 301 para siempre y un cambio de dominio lo dejaría grabado.
+# CERRADO el 7-oct-2026 (decision del owner: "Cerrar puertas, base viva" mientras se rehace el plan del ERP).
+# Toda peticion recibe la pagina de mantenimiento con 503. Como reabrir y el .htaccess original:
+# departamentos/deploy/cierre_erp_20261007/ del repo agencia (LEEME.md). Instancia: axisworks-demo (app.axisworks.studio).
+ErrorDocument 503 /mantenimiento.html
+DirectoryIndex mantenimiento.html
 <IfModule mod_rewrite.c>
   RewriteEngine On
   RewriteCond %{HTTP_HOST} !^(app\.axisworks\.studio|erp\.axisworks\.studio)$ [NC]
   RewriteRule ^(.*)$ https://app.axisworks.studio/$1 [R=302,L]
+  # la pagina misma y la renovacion del certificado (.well-known) no se cierran
+  RewriteCond %{REQUEST_URI} !^/mantenimiento\.html$
+  RewriteCond %{REQUEST_URI} !^/\.well-known/
+  RewriteRule ^ - [R=503,L]
 </IfModule>
 <IfModule mod_headers.c>
+  Header always set Retry-After "86400"
+  Header always set Cache-Control "no-store"
   Header always set X-Robots-Tag "noindex, nofollow"
   Header always set Strict-Transport-Security "max-age=31536000"
   Header always set X-Content-Type-Options "nosniff"
-  Header always set X-Frame-Options "SAMEORIGIN"
-  Header always set Referrer-Policy "strict-origin-when-cross-origin"
-  Header always set Permissions-Policy "camera=(), microphone=(), geolocation=(), payment=()"
-  Header always set Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdn.jsdelivr.net; font-src 'self' data: https://fonts.gstatic.com https://cdn.jsdelivr.net; img-src 'self' data: blob: https://eskzymvyhfxhatgreiyx.supabase.co; connect-src 'self' https://eskzymvyhfxhatgreiyx.supabase.co wss://eskzymvyhfxhatgreiyx.supabase.co; frame-ancestors 'self'; base-uri 'self'; form-action 'self'; object-src 'none'"
-  # Hostinger cachea .js/.css 7 días: sin esto, tras publicar el navegador sigue con el guard viejo (AXW-70, Deploy;
-  # el mismo bloque que la demo pública).
-  <FilesMatch "\.(html|js|css|json)$">
-    Header unset Expires
-    Header unset Cache-Control
-    Header always set Cache-Control "no-cache"
-  </FilesMatch>
+  Header always set X-Frame-Options "DENY"
+  Header always set Referrer-Policy "no-referrer"
+  Header always set Content-Security-Policy "default-src 'none'; style-src 'unsafe-inline'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'"
 </IfModule>
-DirectoryIndex index.html
