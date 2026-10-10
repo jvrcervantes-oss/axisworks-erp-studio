@@ -21,10 +21,10 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.110.9/dist/umd/supabase.min.js" integrity="sha384-XtYxyIfxexJVTROWK0+c5T8tJ2ItsVLcdgR5nJIoo6WzQqaBZoTPGgbS7XvkRNBZ" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-<script src="/contracts/assets/cierre.js?v=a7ef5b94"></script>
-<script src="/contracts/assets/instancia.js?v=65955448"></script>
+<script src="/contracts/assets/cierre.js?v=0fa19668"></script>
+<script src="/contracts/assets/instancia.js?v=7f9db476"></script>
 <script src="/contracts/assets/version.js?v=f321ade8"></script>
-<script src="/contracts/assets/guard.js?v=59049eef" data-rol="super_admin"></script>
+<script src="/contracts/assets/guard.js?v=1eef6acc" data-rol="super_admin"></script>
 <style>html,body{margin:0;padding:0;}body{overscroll-behavior:none;}html{scroll-behavior:smooth;scroll-padding-top:80px}</style>
 <style>
 button:focus-visible,a:focus-visible,summary:focus-visible{outline:2px solid #4f46e5;outline-offset:2px}
@@ -73,7 +73,7 @@ details[open] .chev{transform:rotate(180deg)}
 <a data-accion="ir-seccion" data-seccion="equipo" href="#equipo" class="flex items-center gap-space-sm px-space-sm py-space-sm rounded-lg text-on-surface-variant hover:bg-surface-container hover:text-on-surface"><span class="material-symbols-outlined text-[20px]" aria-hidden="true">groups</span><span class="font-label-md text-label-md">El equipo del Padrino</span></a>
 <a data-accion="ir-seccion" data-seccion="flujos" href="#flujos" class="flex items-center gap-space-sm px-space-sm py-space-sm rounded-lg text-on-surface-variant hover:bg-surface-container hover:text-on-surface"><span class="material-symbols-outlined text-[20px]" aria-hidden="true">route</span><span class="font-label-md text-label-md">Cómo funciona</span></a>
 <div class="pt-space-md px-space-sm py-space-xs"><span class="font-label-sm text-label-sm uppercase tracking-wider text-outline">Este ERP</span></div>
-<a class="flex items-center gap-space-sm px-space-sm py-space-sm rounded-lg text-on-surface-variant hover:bg-surface-container hover:text-on-surface" href="/intranet/v4/home/"><span class="material-symbols-outlined text-[20px]" aria-hidden="true">login</span><span class="font-label-md text-label-md">Entrar al ERP</span></a>
+<a class="flex items-center gap-space-sm px-space-sm py-space-sm rounded-lg text-on-surface-variant hover:bg-surface-container hover:text-on-surface" href="/home/"><span class="material-symbols-outlined text-[20px]" aria-hidden="true">login</span><span class="font-label-md text-label-md">Entrar al ERP</span></a>
 </nav>
 <div class="p-space-md bg-surface-container-low">
 <div class="p-space-sm bg-surface-container-lowest rounded-lg flex items-center gap-space-xs">
@@ -91,6 +91,7 @@ details[open] .chev{transform:rotate(180deg)}
 <nav data-lw="panel-secciones" aria-label="Secciones del panel" class="flex flex-wrap gap-space-xs mb-space-md">
 <a data-lw="nav-modulos" data-nav="modulos" href="/panel/" class="nav-pill inline-flex items-center gap-space-xs px-space-md py-space-xs rounded-full bg-surface-container-lowest text-on-surface-variant shadow-sm hover:bg-surface-container font-label-md text-label-md"><span class="material-symbols-outlined text-[18px]" aria-hidden="true">tune</span>Módulos</a>
 <a data-lw="nav-pilotos" data-nav="pilotos" aria-current="page" href="/panel/pilotos/" class="nav-pill inline-flex items-center gap-space-xs px-space-md py-space-xs rounded-full bg-surface-container-lowest text-on-surface-variant shadow-sm hover:bg-surface-container font-label-md text-label-md"><span class="material-symbols-outlined text-[18px]" aria-hidden="true">smart_toy</span>Pilotos</a>
+<a data-lw="nav-aprobaciones" data-nav="aprobaciones" href="/panel/aprobaciones/" class="nav-pill inline-flex items-center gap-space-xs px-space-md py-space-xs rounded-full bg-surface-container-lowest text-on-surface-variant shadow-sm hover:bg-surface-container font-label-md text-label-md"><span class="material-symbols-outlined text-[18px]" aria-hidden="true">verified_user</span>Aprobaciones</a>
 </nav>
 <div id="estado-carga" data-lw="pilotos-estado" role="status" class="p-space-md rounded-xl bg-surface-container-lowest text-on-surface-variant">Cargando…</div>
 <div id="vista" data-lw="pilotos-vista" class="hidden space-y-space-xl"></div>

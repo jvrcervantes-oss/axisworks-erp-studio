@@ -6,6 +6,31 @@
   RewriteCond %{HTTP_HOST} !^(app\.axisworks\.studio|erp\.axisworks\.studio)$ [NC]
   RewriteRule ^(.*)$ https://app.axisworks.studio/$1 [R=302,L]
 </IfModule>
+# Legado: lo de antes no muere. 302 hasta verificar el mapa en producción; luego 301.
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteCond %{REQUEST_METHOD} ^(GET|HEAD)$
+  RewriteRule ^intranet(?:/index\.html)?/?$ / [R=302,L,QSA]
+  RewriteCond %{REQUEST_METHOD} ^(GET|HEAD)$
+  RewriteRule ^intranet/v4(?:/index\.html)?/?$ / [R=302,L,QSA]
+  RewriteCond %{REQUEST_METHOD} ^(GET|HEAD)$
+  RewriteRule ^intranet/v4/entrar(?:/.*)?$ /entrar/ [R=302,L,QSA]
+  RewriteCond %{REQUEST_METHOD} ^(GET|HEAD)$
+  RewriteRule ^intranet/v4/(\.git|ajustes|asistente|asistente\-correos|bancos|comision\-admin|comisiones|compradores|comunicacion|condiciones|contratos|contratos\-inversor|crea\-contrasena|creatividades|cuentas|documentacion|emitir|equipos\-venta|facturas|finanzas|gastos|generador\-contratos|home|leads|modelos|obra|operaciones|plantillas|productos|proyectos|proyectos\-cuentas|recibos|reparto|reservas|reservas\-producto|sociedades|soporte|taller|textos\-contrato|usuarios|vencimientos|ventas|whatsapp\-bot|whatsapp\-bot\-alta|assets)(?:/(.*))?$ /$1/$2 [R=302,L,QSA]
+  RewriteCond %{REQUEST_METHOD} ^(GET|HEAD)$
+  RewriteRule ^intranet/(facturas|vencimientos)/?(?:index\.html)?$ /$1/ [R=302,L,QSA]
+  RewriteCond %{REQUEST_METHOD} ^(GET|HEAD)$
+  RewriteRule ^intranet/(leads|obra|creatividades|dossier|facturas|vencimientos)(?:/(.*))?$ /clasico/$1/$2 [R=302,L,QSA]
+  RewriteCond %{REQUEST_METHOD} ^(GET|HEAD)$
+  RewriteRule ^intranet/(\.git|ajustes|asistente|asistente\-correos|bancos|comision\-admin|comisiones|compradores|comunicacion|condiciones|contratos|contratos\-inversor|crea\-contrasena|cuentas|documentacion|emitir|equipos\-venta|finanzas|gastos|generador\-contratos|home|modelos|operaciones|plantillas|productos|proyectos|proyectos\-cuentas|recibos|reparto|reservas|reservas\-producto|sociedades|soporte|taller|textos\-contrato|usuarios|ventas|whatsapp\-bot|whatsapp\-bot\-alta)(?:/(.*))?$ /$1/$2 [R=302,L,QSA]
+</IfModule>
+# Lo que nunca debe servirse (estaba solo en el .htaccess de Lawang; aqui lo pedia la revision previa #180): ficheros de
+# codigo y de trabajo, y las carpetas de estado. Por extension ademas de por carpeta: lo proximo nace cubierto.
+<IfModule mod_alias.c>
+  RedirectMatch 404 (?i)\.(sql|py|ts|mjs|toml|md|bak|log)$
+  RedirectMatch 404 (?i)/(private|supabase)/
+  RedirectMatch 404 (?i)/_
+</IfModule>
 <IfModule mod_headers.c>
   Header always set X-Robots-Tag "noindex, nofollow"
   Header always set Strict-Transport-Security "max-age=31536000"
@@ -13,7 +38,7 @@
   Header always set X-Frame-Options "SAMEORIGIN"
   Header always set Referrer-Policy "strict-origin-when-cross-origin"
   Header always set Permissions-Policy "camera=(), microphone=(), geolocation=(), payment=()"
-  Header always set Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdn.jsdelivr.net; font-src 'self' data: https://fonts.gstatic.com https://cdn.jsdelivr.net; img-src 'self' data: blob: https://eskzymvyhfxhatgreiyx.supabase.co; connect-src 'self' https://eskzymvyhfxhatgreiyx.supabase.co wss://eskzymvyhfxhatgreiyx.supabase.co; frame-ancestors 'self'; base-uri 'self'; form-action 'self'; object-src 'none'"
+  Header always set Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://connect.facebook.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdn.jsdelivr.net; font-src 'self' data: https://fonts.gstatic.com https://cdn.jsdelivr.net; img-src 'self' data: blob: https://eskzymvyhfxhatgreiyx.supabase.co; frame-src https://www.facebook.com https://web.facebook.com https://staticxx.facebook.com; connect-src 'self' https://eskzymvyhfxhatgreiyx.supabase.co wss://eskzymvyhfxhatgreiyx.supabase.co; frame-ancestors 'self'; base-uri 'self'; form-action 'self'; object-src 'none'"
   # Hostinger cachea .js/.css 7 días: sin esto, tras publicar el navegador sigue con el guard viejo (AXW-70, Deploy;
   # el mismo bloque que la demo pública).
   <FilesMatch "\.(html|js|css|json)$">

@@ -8,7 +8,7 @@
     subcabecera: "ERP",
     titulo: "AxisWorks ERP",
     firma_correo: "AxisWorks",
-    inicio: "/intranet/v4/home/",
+    inicio: "/home/",
     masterplans: Object.freeze({}),
     proyectos_con_fases: Object.freeze([])
   });
