@@ -2,7 +2,7 @@
 # Toda peticion recibe la pagina de mantenimiento con 503. Como reabrir y el .htaccess original:
 # departamentos/deploy/cierre_erp_20261007/ del repo agencia (LEEME.md). Instancia: axisworks-demo (app.axisworks.studio).
 # EXCEPCION 12-oct-2026 (owner 05:25: «Abre solo mi panel»): se abren SOLO el panel de control de modulos (/panel/),
-# la pantalla de inicio de sesion (/) que el panel usa para entrar, y los ficheros fijos que cargan esas dos paginas.
+# la pantalla de entrar (/, solo con la query que usa el panel; sin ella es el inicio de la demo), y los ficheros fijos que cargan esas dos paginas.
 # Todo lo demas sigue en 503. Vuelta atras: este fichero = htaccess_axisworks-demo_cerrado.txt (commit f3bf06d).
 ErrorDocument 503 /mantenimiento.html
 DirectoryIndex index.html
@@ -11,10 +11,16 @@ Options -Indexes
   RewriteEngine On
   RewriteCond %{HTTP_HOST} !^(app\.axisworks\.studio|erp\.axisworks\.studio)$ [NC]
   RewriteRule ^(.*)$ https://app.axisworks.studio/$1 [R=302,L]
+  # "/" es la pantalla de entrar Y el inicio de la demo (con sesion y ?sin_permiso=... pinta el inicio entero): solo se
+  # sirve sin query, con la vuelta al panel que genera guard.js (?next=encodeURIComponent("/panel/...")) o con el aviso de
+  # cuenta desactivada. Lista blanca sobre la query en crudo: una lista negra de sin_permiso se salta con sin%5Fpermiso.
+  RewriteCond %{REQUEST_URI} ^/(index\.html)?$
+  RewriteCond %{QUERY_STRING} !^(next=%2Fpanel%2F[^&]*|desactivado=1)?$
+  RewriteRule ^ - [R=503,L]
   # la pagina misma y la renovacion del certificado (.well-known) no se cierran
   RewriteCond %{REQUEST_URI} !^/mantenimiento\.html$
   RewriteCond %{REQUEST_URI} !^/\.well-known/
-  # inicio de sesion: guard.js manda a "/" sin sesion (LOGIN="/") y vuelve a ?next=/panel/
+  # pantalla de entrar (con la query de arriba): guard.js manda a "/" sin sesion (LOGIN="/") y vuelve a ?next=/panel/
   RewriteCond %{REQUEST_URI} !^/(index\.html)?$
   # el panel (sin sus subpantallas aprobaciones/ y pilotos/)
   RewriteCond %{REQUEST_URI} !^/panel(/|/index\.html|/panel\.css)?$
