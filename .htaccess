@@ -1,8 +1,12 @@
 # CERRADO el 7-oct-2026 (decision del owner: "Cerrar puertas, base viva" mientras se rehace el plan del ERP).
 # Toda peticion recibe la pagina de mantenimiento con 503. Como reabrir y el .htaccess original:
 # departamentos/deploy/cierre_erp_20261007/ del repo agencia (LEEME.md). Instancia: axisworks-demo (app.axisworks.studio).
+# EXCEPCION 12-oct-2026 (owner 05:25: «Abre solo mi panel»): se abren SOLO el panel de control de modulos (/panel/),
+# la pantalla de inicio de sesion (/) que el panel usa para entrar, y los ficheros fijos que cargan esas dos paginas.
+# Todo lo demas sigue en 503. Vuelta atras: este fichero = htaccess_axisworks-demo_cerrado.txt (commit f3bf06d).
 ErrorDocument 503 /mantenimiento.html
-DirectoryIndex mantenimiento.html
+DirectoryIndex index.html
+Options -Indexes
 <IfModule mod_rewrite.c>
   RewriteEngine On
   RewriteCond %{HTTP_HOST} !^(app\.axisworks\.studio|erp\.axisworks\.studio)$ [NC]
@@ -10,6 +14,15 @@ DirectoryIndex mantenimiento.html
   # la pagina misma y la renovacion del certificado (.well-known) no se cierran
   RewriteCond %{REQUEST_URI} !^/mantenimiento\.html$
   RewriteCond %{REQUEST_URI} !^/\.well-known/
+  # inicio de sesion: guard.js manda a "/" sin sesion (LOGIN="/") y vuelve a ?next=/panel/
+  RewriteCond %{REQUEST_URI} !^/(index\.html)?$
+  # el panel (sin sus subpantallas aprobaciones/ y pilotos/)
+  RewriteCond %{REQUEST_URI} !^/panel(/|/index\.html|/panel\.css)?$
+  # lo que cargan / y /panel/ por <script>/<link> (lista exacta, medida sobre el build 6c42547)
+  RewriteCond %{REQUEST_URI} !^/contracts/assets/(guard|instancia|version|cierre|avisos|dialogo|dinero|herramientas|i18n|idioma|movimiento-v3|operaciones-cuentas|roles|saldos-v3|suite-comun|topbar|vocabulario)\.js$
+  RewriteCond %{REQUEST_URI} !^/contracts/assets/(axw|suite-v3|suite-v3-herramientas)\.css$
+  RewriteCond %{REQUEST_URI} !^/contracts/assets/brand/axw-logo-v3(-dark)?\.png$
+  RewriteCond %{REQUEST_URI} !^/clasico/facturas/totales\.js$
   RewriteRule ^ - [R=503,L]
 </IfModule>
 <IfModule mod_headers.c>
@@ -19,6 +32,9 @@ DirectoryIndex mantenimiento.html
   Header always set Strict-Transport-Security "max-age=31536000"
   Header always set X-Content-Type-Options "nosniff"
   Header always set X-Frame-Options "DENY"
-  Header always set Referrer-Policy "no-referrer"
-  Header always set Content-Security-Policy "default-src 'none'; style-src 'unsafe-inline'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'"
+  Header always set Referrer-Policy "strict-origin-when-cross-origin"
+  Header always set Cross-Origin-Opener-Policy "same-origin"
+  Header always set Permissions-Policy "camera=(), microphone=(), geolocation=(), payment=()"
+  # la CSP del .htaccess original (5c2ebfa): la que el panel y el inicio de sesion necesitan para hablar con su base
+  Header always set Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdn.jsdelivr.net; font-src 'self' data: https://fonts.gstatic.com https://cdn.jsdelivr.net; img-src 'self' data: blob: https://eskzymvyhfxhatgreiyx.supabase.co; connect-src 'self' https://eskzymvyhfxhatgreiyx.supabase.co wss://eskzymvyhfxhatgreiyx.supabase.co; frame-ancestors 'none'; base-uri 'self'; form-action 'self'; object-src 'none'"
 </IfModule>
