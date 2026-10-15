@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="robots" content="noindex">
-<title>Pilotos · AxisWorks ERP</title>
+<title>Agentes autónomos · AxisWorks ERP</title>
 <!-- Vista «Pilotos» del panel del owner (1-oct-2026, encargos/20261001_panel_pilotos_vista.md). Solo lectura.
      build.py --instancia la copia a /panel/pilotos/ SOLO en la instancia con `panel_control`, con la misma piel que
      /panel/ (panel_control.html: mismo tailwind.json, misma CSP, mismo guard de super_admin).
@@ -24,6 +24,7 @@
 <script src="/contracts/assets/cierre.js?v=0fa19668"></script>
 <script src="/contracts/assets/instancia.js?v=7f9db476"></script>
 <script src="/contracts/assets/version.js?v=f321ade8"></script>
+<script src="/contracts/assets/roles.js?v=69ce43cb"></script>
 <script src="/contracts/assets/guard.js?v=1eef6acc" data-rol="super_admin"></script>
 <style>html,body{margin:0;padding:0;}body{overscroll-behavior:none;}html{scroll-behavior:smooth;scroll-padding-top:80px}</style>
 <style>
@@ -55,7 +56,7 @@ details[open] .chev{transform:rotate(180deg)}
 .esq-d{display:none}.esq-m{display:block;max-width:440px;margin:0 auto}/* aqui la columna es mas estrecha que en el panel de la agencia (barra lateral de 288 px): el esquema ancho solo cabe con texto >= 12 px desde 1280 */@media (min-width:1280px){.esq-d{display:block}.esq-m{display:none}}svg.esq-d,svg.esq-m{width:100%;height:auto}
 @media (max-width:1279px){.esq-art{padding-left:8px;padding-right:8px}.esq-wrap{padding-left:4px;padding-right:4px}}
 </style>
-<link rel="stylesheet" href="/panel/panel.css?v=d136fb83">
+<link rel="stylesheet" href="/panel/panel.css?v=68bc35cc">
 </head>
 <body class="bg-surface font-body-md text-on-surface antialiased">
 <aside class="hidden lg:flex fixed left-0 top-0 h-full w-72 bg-surface-container-lowest z-50 flex-col shadow-[0_1px_8px_rgba(0,0,0,0.04)]">
@@ -84,13 +85,14 @@ details[open] .chev{transform:rotate(180deg)}
 </aside>
 <div class="lg:pl-72">
 <header class="fixed top-0 left-0 lg:left-72 right-0 h-16 bg-surface/85 backdrop-blur-xl z-40 shadow-[0_1px_8px_rgba(0,0,0,0.04)] flex items-center justify-between gap-space-sm px-margin md:px-gutter-lg">
-<h1 class="font-headline-sm text-headline-sm font-bold text-on-surface truncate">Pilotos</h1>
+<h1 class="font-headline-sm text-headline-sm font-bold text-on-surface truncate">Agentes autónomos</h1>
 <span id="sello" data-lw="pilotos-sello" class="font-code-metric text-code-metric text-on-surface-variant text-right"></span>
 </header>
 <main class="pt-20 pb-16 px-margin md:px-gutter-lg max-w-5xl">
 <nav data-lw="panel-secciones" aria-label="Secciones del panel" class="flex flex-wrap gap-space-xs mb-space-md">
 <a data-lw="nav-modulos" data-nav="modulos" href="/panel/" class="nav-pill inline-flex items-center gap-space-xs px-space-md py-space-xs rounded-full bg-surface-container-lowest text-on-surface-variant shadow-sm hover:bg-surface-container font-label-md text-label-md"><span class="material-symbols-outlined text-[18px]" aria-hidden="true">tune</span>Módulos</a>
-<a data-lw="nav-pilotos" data-nav="pilotos" aria-current="page" href="/panel/pilotos/" class="nav-pill inline-flex items-center gap-space-xs px-space-md py-space-xs rounded-full bg-surface-container-lowest text-on-surface-variant shadow-sm hover:bg-surface-container font-label-md text-label-md"><span class="material-symbols-outlined text-[18px]" aria-hidden="true">smart_toy</span>Pilotos</a>
+<a data-lw="nav-mapa" data-nav="mapa" href="/panel/#mapa" class="nav-pill inline-flex items-center gap-space-xs px-space-md py-space-xs rounded-full bg-surface-container-lowest text-on-surface-variant shadow-sm hover:bg-surface-container font-label-md text-label-md"><span class="material-symbols-outlined text-[18px]" aria-hidden="true">map</span>Mapa de instalación</a>
+<a data-lw="nav-pilotos" data-nav="pilotos" aria-current="page" href="/panel/pilotos/" class="nav-pill inline-flex items-center gap-space-xs px-space-md py-space-xs rounded-full bg-surface-container-lowest text-on-surface-variant shadow-sm hover:bg-surface-container font-label-md text-label-md"><span class="material-symbols-outlined text-[18px]" aria-hidden="true">smart_toy</span>Agentes autónomos</a>
 <a data-lw="nav-aprobaciones" data-nav="aprobaciones" href="/panel/aprobaciones/" class="nav-pill inline-flex items-center gap-space-xs px-space-md py-space-xs rounded-full bg-surface-container-lowest text-on-surface-variant shadow-sm hover:bg-surface-container font-label-md text-label-md"><span class="material-symbols-outlined text-[18px]" aria-hidden="true">verified_user</span>Aprobaciones</a>
 </nav>
 <div id="estado-carga" data-lw="pilotos-estado" role="status" class="p-space-md rounded-xl bg-surface-container-lowest text-on-surface-variant">Cargando…</div>
@@ -464,7 +466,7 @@ details[open] .chev{transform:rotate(180deg)}
           tx(bx + 14, 334, [b.piloto.nombre], 15.5, 'svg-n') + estadoPunto(bx + bw - 18, 330, b.piloto.estado) +
           tx(bx + 14, 354, wrap(b.piloto.linea, bw - 28, 11.5), 11.5, 'svg-t', 'start', 14.5);
       });
-      return svg(920, 410, o, 'Mapa: tú arriba; debajo, tres negocios (' + n.map(function (b) { return b.nombre; }).join(', ') + ') y, bajo cada uno, su piloto. Entre tú y cada piloto hay una flecha en los dos sentidos.', 'hidden md:block');
+      return svg(920, 410, o, 'Mapa: tú arriba; debajo, tres negocios (' + n.map(function (b) { return b.nombre; }).join(', ') + ') y, bajo cada uno, su agente autónomo. Entre tú y cada agente hay una flecha en los dos sentidos.', 'hidden md:block');
     }
     // móvil: una columna, riel a la izquierda
     o += marcas(id) + caja(70, 8, 220, 58, { fill: '#4f46e5', stroke: '#4f46e5' }) +
@@ -486,7 +488,7 @@ details[open] .chev{transform:rotate(180deg)}
     var ult = mids[mids.length - 1];
     o += linea([80, 66, 80, 104, 20, 104, 20, ult], id, true);
     mids.forEach(function (m) { o += linea([20, m, 42, m], id, false); });
-    return svg(360, y, o, 'Mapa: tú arriba; debajo, tres negocios y, bajo cada uno, su piloto. Entre tú y cada piloto hay una flecha en los dos sentidos.', 'md:hidden');
+    return svg(360, y, o, 'Mapa: tú arriba; debajo, tres negocios y, bajo cada uno, su agente autónomo. Entre tú y cada agente hay una flecha en los dos sentidos.', 'md:hidden');
   }
 
   // ── flechas entre pasos y los pequeños dibujos de los flujos ──────────────────────────────────
